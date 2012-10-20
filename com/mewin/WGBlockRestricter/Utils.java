@@ -2,6 +2,9 @@ package com.mewin.WGBlockRestricter;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.util.HashMap;
@@ -111,9 +114,27 @@ public final class Utils {
         {
             return false;
         }
+        else if (isTreefarm(region))
+        {
+            return false;
+        }
         else
         {
             return null;
+        }
+    }
+    
+    public static boolean isTreefarm(ProtectedRegion region)
+    {
+        try
+        {
+            StateFlag treeFarmFlag = de.bangl.wgtff.listeners.PlayerListener.FLAG_TREEFARM;
+            
+            return region.getFlag(treeFarmFlag) == State.DENY;
+        }
+        catch(Exception ex)
+        {
+            return false;
         }
     }
     
