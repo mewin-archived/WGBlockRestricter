@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mewin.WGBlockRestricter;
 
 import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
@@ -25,20 +21,17 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
     private WGCustomFlagsPlugin custPlugin;
     
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         wgPlugin = getWorldGuard();
         custPlugin = getWGCustomFlags();
         
-        if (wgPlugin == null)
-        {
+        if (wgPlugin == null) {
             getLogger().warning("This plugin requires WorldGuard, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
         
-        if (custPlugin == null)
-        {
+        if (custPlugin == null) {
             getLogger().warning("This plugin requires WorldGuard Custom Flags, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -52,24 +45,20 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
         custPlugin.addCustomFlag(DENY_BLOCK_FLAG);
     }
     
-    private WorldGuardPlugin getWorldGuard()
-    {
+    private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
         
-        if (plugin == null || !(plugin instanceof WorldGuardPlugin))
-        {
+        if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
             return null;
         }
         
         return (WorldGuardPlugin) plugin;
     }
     
-    private WGCustomFlagsPlugin getWGCustomFlags()
-    {
+    private WGCustomFlagsPlugin getWGCustomFlags() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WGCustomFlags");
         
-        if (plugin == null || !(plugin instanceof WGCustomFlagsPlugin))
-        {
+        if (plugin == null || !(plugin instanceof WGCustomFlagsPlugin)) {
             return null;
         }
         
