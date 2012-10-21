@@ -1,6 +1,8 @@
 name: WGBlockRestricter
-author: mewin
-version: 1.0
 main: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin
+description: WorldGuard extension to black/whitelist block types in specific regions.
+version: 1.0
+
+authors: [ mewin ]
 depend: [ WorldGuard, WGCustomFlags ]
 softdepend: [ WGTreeFarmFlag ]
