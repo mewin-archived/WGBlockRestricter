@@ -1,4 +1,4 @@
 WGBlockRestricter
 =================
 
-add block block-/whitelisting in WorldGuard regions
+WorldGuard extension to black/whitelist block types in specific regions.
