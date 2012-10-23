@@ -1,5 +1,5 @@
 name: WGBlockRestricter
 author: mewin
-version: 1.0
+version: 1.1
 main: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin
 depend: [ WorldGuard, WGCustomFlags ]
