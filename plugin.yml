@@ -3,4 +3,3 @@ author: mewin
 version: 1.0
 main: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin
 depend: [ WorldGuard, WGCustomFlags ]
-softdepend: [ WGTreeFarmFlag ]
