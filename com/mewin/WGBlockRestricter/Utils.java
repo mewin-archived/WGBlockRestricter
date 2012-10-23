@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -102,12 +103,21 @@ public final class Utils {
         }
     }
     
+    public static boolean hasWGTFF()
+    {
+        return Bukkit.getServer().getPluginManager().getPlugin("WGTreeFarmFlag") != null;
+    }
+    
     public static boolean isTreefarm(ProtectedRegion region) {
+        if (!hasWGTFF())
+        {
+            return false;
+        }
         try {
             StateFlag treeFarmFlag = de.bangl.wgtff.listeners.PlayerListener.FLAG_TREEFARM;
             
             return region.getFlag(treeFarmFlag) == State.DENY;
-        } catch(Exception ex) {
+        } catch(Error ex) {
             return false;
         }
     }
