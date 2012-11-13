@@ -101,6 +101,10 @@ public final class Utils {
     }
     
     public static Object blockAllowedInRegion(ProtectedRegion region, Material blockType) {
+        if (region == null)
+        {
+            return null;
+        }
         BlockMaterial bm = castMaterial(blockType);
         
         HashSet<BlockMaterial> allowedBlocks = (HashSet<BlockMaterial>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BLOCK_FLAG);
