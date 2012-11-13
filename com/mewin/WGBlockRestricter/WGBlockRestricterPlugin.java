@@ -32,7 +32,7 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
     public static final CustomSetFlag ALLOW_BLOCK_FLAG = new CustomSetFlag("allow-blocks", BLOCK_TYPE_FLAG);
     public static final CustomSetFlag DENY_BLOCK_FLAG = new CustomSetFlag("deny-blocks", BLOCK_TYPE_FLAG);
     
-    private BlockPlaceListener listener;
+    private BlockListener listener;
     private WorldGuardPlugin wgPlugin;
     private WGCustomFlagsPlugin custPlugin;
     
@@ -53,7 +53,7 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
             return;
         }
         
-        listener = new BlockPlaceListener(this, wgPlugin);
+        listener = new BlockListener(this, wgPlugin);
         
         getServer().getPluginManager().registerEvents(listener, this);
         
