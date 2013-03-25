@@ -20,12 +20,14 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Hanging;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 
@@ -64,26 +66,33 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onHangingPlace(HangingPlaceEvent e)
     {
-        if (!e.getPlayer().isOp()
-                && !Utils.blockAllowedAtLocation(wgPlugin, Material.PAINTING, e.getBlock().getRelative(e.getBlockFace()).getLocation()))
+        Material mat = Material.PAINTING;
+        if (e.getEntity() instanceof ItemFrame)
         {
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place this painting here.");
+            mat = Material.ITEM_FRAME;
+        }
+        if (!e.getPlayer().isOp()
+                && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getBlock().getRelative(e.getBlockFace()).getLocation()))
+        {
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place this block here.");
             e.setCancelled(true);
         }
     }
     
-    @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent e)
+    public void onHangingBreakByEntity(HangingBreakByEntityEvent e)
     {
-        if (e.getEntity() instanceof Hanging && e.getDamager() instanceof Player)
+        if (e.getRemover() instanceof Player)
         {
-            Player player = (Player) e.getDamager();
-            Hanging hanging = (Hanging) e.getEntity();
-            
-            if (!player.isOp()
-                    && !Utils.blockAllowedAtLocation(wgPlugin, Material.PAINTING, hanging.getLocation()))
+            Player player = (Player) e.getRemover();
+            Material mat = Material.PAINTING;
+            if (e.getEntity() instanceof ItemFrame)
             {
-                player.sendMessage(ChatColor.RED + "You are not allowed to break this painting here.");
+                mat = Material.ITEM_FRAME;
+            }
+            if (!player.isOp()
+                    && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getEntity().getLocation()))
+            {
+                player.sendMessage(ChatColor.RED + "You are not allowed to place this block here.");
                 e.setCancelled(true);
             }
         }

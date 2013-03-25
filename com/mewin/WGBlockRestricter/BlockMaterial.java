@@ -154,5 +154,7 @@ public enum BlockMaterial
     SKULL,
     ANVIL, 
     
-    PAINTING
+    //for hanging events
+    PAINTING, 
+    ITEM_FRAME
 }
