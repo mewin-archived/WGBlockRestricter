@@ -79,6 +79,7 @@ public class BlockListener implements Listener {
         }
     }
     
+    @EventHandler
     public void onHangingBreakByEntity(HangingBreakByEntityEvent e)
     {
         if (e.getRemover() instanceof Player)
