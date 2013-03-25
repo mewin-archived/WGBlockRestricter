@@ -93,7 +93,7 @@ public class BlockListener implements Listener {
             if (!player.isOp()
                     && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getEntity().getLocation()))
             {
-                player.sendMessage(ChatColor.RED + "You are not allowed to place this block here.");
+                player.sendMessage(ChatColor.RED + "You are not allowed to break this block here.");
                 e.setCancelled(true);
             }
         }
