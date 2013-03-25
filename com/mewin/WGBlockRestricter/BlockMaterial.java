@@ -152,5 +152,7 @@ public enum BlockMaterial
     POTATO,
     WOOD_BUTTON,
     SKULL,
-    ANVIL
+    ANVIL, 
+    
+    PAINTING
 }
