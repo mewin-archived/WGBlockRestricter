@@ -22,6 +22,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -105,21 +106,33 @@ public final class Utils {
         {
             return null;
         }
-        BlockMaterial bm = castMaterial(blockType);
+        ArrayList<BlockMaterial> bmList = castMaterial(blockType);
         
         HashSet<BlockMaterial> allowedBlocks = (HashSet<BlockMaterial>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BLOCK_FLAG);
         HashSet<BlockMaterial> blockedBlocks = (HashSet<BlockMaterial>) region.getFlag(WGBlockRestricterPlugin.DENY_BLOCK_FLAG);
         
-        if (allowedBlocks != null && (allowedBlocks.contains(bm) || allowedBlocks.contains(BlockMaterial.ANY))) {
-            return true;
+        boolean denied = false;
+        
+        for (BlockMaterial bm : bmList)
+        {
+            if (allowedBlocks != null && (allowedBlocks.contains(bm) || allowedBlocks.contains(BlockMaterial.ANY))) {
+                return true;
+            }
+            else if(blockedBlocks != null && (blockedBlocks.contains(bm) || blockedBlocks.contains(BlockMaterial.ANY))) {
+                denied = true;
+            }
+            else if (isTreefarm(region)) {
+                denied = true;
+            }
         }
-        else if(blockedBlocks != null && (blockedBlocks.contains(bm) || blockedBlocks.contains(BlockMaterial.ANY))) {
-            return false;
-        }
-        else if (isTreefarm(region)) {
-            return false;
-        } else {
+        
+        if (!denied)
+        {
             return null;
+        }
+        else
+        {
+            return false;
         }
     }
     
@@ -142,9 +155,9 @@ public final class Utils {
         }
     }
     
-    public static BlockMaterial castMaterial(Material material) {
+    public static ArrayList<BlockMaterial> castMaterial(Material material) {
         try {
-            return BlockMaterial.valueOf(material.name());
+            return BlockMaterial.ByMaterial.byMaterial.get(material);
         } catch(IllegalArgumentException ex) {
             return null;
         }

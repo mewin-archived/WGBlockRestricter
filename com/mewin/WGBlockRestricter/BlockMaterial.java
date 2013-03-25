@@ -1,5 +1,10 @@
 package com.mewin.WGBlockRestricter;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import org.bukkit.Material;
+
 /**
  *
  * @author mewin
@@ -153,8 +158,77 @@ public enum BlockMaterial
     WOOD_BUTTON,
     SKULL,
     ANVIL, 
+    TRAPPED_CHEST, 
+    GOLD_PLATE, 
+    IRON_PLATE, 
+    REDSTONE_COMPARATOR_OFF, 
+    REDSTONE_COMPARATOR_ON, 
+    DAYLIGHT_DETECTOR, 
+    QUARTZ_ORE, 
+    HOPPER, 
+    QUARTZ_BLOCK, 
+    QUARTZ_STAIRS, 
+    ACTIVATOR_RAIL, 
+    DROPPER,
+    REDSTONE_BLOCK, 
+    
+    DIODE(Material.DIODE_BLOCK_ON, Material.DIODE_BLOCK_OFF), 
+    REDSTONE_COMPARATOR(Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON), 
+    REDSTONE_TORCH(Material.REDSTONE_TORCH_ON, Material.REDSTONE_TORCH_OFF), 
+    REDSTONE_LAMP(Material.REDSTONE_LAMP_OFF, Material.REDSTONE_LAMP_ON), 
+    SIGN(Material.SIGN_POST, Material.WALL_SIGN), 
+    PISTON(Material.PISTON_BASE, Material.PISTON_EXTENSION, Material.PISTON_MOVING_PIECE, Material.PISTON_STICKY_BASE), 
     
     //for hanging events
     PAINTING, 
-    ITEM_FRAME
+    ITEM_FRAME;
+    
+    
+    private Material[] mats;
+    
+    private BlockMaterial()
+    {
+        mats = new Material[0];
+        try
+        {
+            Material mat = Material.valueOf(this.name());
+            if (mat != null)
+            {
+                addMaterial(mat);
+            }
+        }
+        catch(Exception ex)
+        {
+            
+        }
+    }
+    
+    private BlockMaterial(Material ... mats)
+    {
+        this.mats = mats;
+        for (Material mat : mats)
+        {
+            addMaterial(mat);
+        }
+    }
+    
+    private void addMaterial(Material mat)
+    {
+        if (!ByMaterial.byMaterial.containsKey(mat))
+        {
+            ByMaterial.byMaterial.put(mat, new ArrayList<BlockMaterial>());
+        }
+        ByMaterial.byMaterial.get(mat).add(this);
+    }
+    
+    public Material[] getMaterials()
+    {
+        return mats;
+    }
+    
+    public static final class ByMaterial
+    {
+        public static EnumMap<Material, ArrayList<BlockMaterial>> byMaterial = new EnumMap<Material, ArrayList<BlockMaterial>>(Material.class);
+    }
 }
+    
