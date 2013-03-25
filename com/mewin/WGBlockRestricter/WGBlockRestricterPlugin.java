@@ -20,6 +20,12 @@ import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
 import com.mewin.WGCustomFlags.flags.CustomSetFlag;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.EnumFlag;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,6 +65,8 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
         
         custPlugin.addCustomFlag(ALLOW_BLOCK_FLAG);
         custPlugin.addCustomFlag(DENY_BLOCK_FLAG);
+        
+        loadConfig();
     }
     
     private WorldGuardPlugin getWorldGuard() {
@@ -79,5 +87,77 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
         }
         
         return (WGCustomFlagsPlugin) plugin;
+    }
+    
+    private void loadConfig()
+    {
+        File configFile = new File(this.getDataFolder(), "config.yml");
+        if (!this.getDataFolder().exists())
+        {
+            this.getDataFolder().mkdirs();
+        }
+        
+        if (!configFile.exists())
+        {
+            createDefaultConfig(configFile);
+        }
+        
+        try
+        {
+            this.getConfig().load(configFile);
+        }
+        catch(FileNotFoundException x)
+        {
+            getLogger().log(Level.WARNING, "Creating default configuration failed!");
+        }
+        catch(IOException ex)
+        {
+            getLogger().log(Level.WARNING, "Could not load configuration file: ", ex);
+        }
+        catch(Exception ex)
+        {
+            getLogger().log(Level.WARNING, "Invalid configuration: ", ex);
+        }
+    }
+    
+    private void createDefaultConfig(File configFile)
+    {
+        FileOutputStream out = null;
+        InputStream in = null;
+        try
+        {
+            configFile.createNewFile();
+            out = new FileOutputStream(configFile);
+            in = WGBlockRestricterPlugin.class.getResourceAsStream("/config.yml");
+            int r;
+            while ((r = in.read()) > -1)
+            {
+                out.write(r);
+            }
+        }
+        catch(IOException ex)
+        {
+            getLogger().log(Level.WARNING, "Could not create configuration file: ", ex);
+        }
+        finally
+        {
+            if (out != null)
+            {
+                try
+                {
+                    out.close();
+                }
+                catch(Exception ex) {}
+            }
+            
+            if (in != null)
+            {
+                try
+                {
+                    in.close();
+                }
+                catch(Exception ex) {}
+            }
+        }
     }
 }

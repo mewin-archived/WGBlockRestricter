@@ -26,9 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 
 /**
@@ -48,7 +46,12 @@ public class BlockListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         if (!e.getPlayer().isOp()
                 && !Utils.blockAllowedAtLocation(wgPlugin, e.getBlockPlaced().getType(), e.getBlockPlaced().getLocation())) {
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place this block here.");
+            String message = plugin.getConfig().getString("messages.deny-block-place", "&cYou are not allowed to place {block} here.");
+            if (!"".equals(message))
+            {
+                e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message
+                        .replaceAll("\\{block\\}", e.getBlock().getType().name())));
+            }
             e.setCancelled(true);
         }
     }
@@ -58,7 +61,12 @@ public class BlockListener implements Listener {
     {
         if (!e.getPlayer().isOp()
                 && !Utils.blockAllowedAtLocation(wgPlugin, e.getBlock().getType(), e.getBlock().getLocation())) {
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to break this block here.");
+            String message = plugin.getConfig().getString("messages.deny-block-break", "&cYou are not allowed to break {block} here.");
+            if (!"".equals(message))
+            {
+                e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message
+                        .replaceAll("\\{block\\}", e.getBlock().getType().name())));
+            }
             e.setCancelled(true);
         }
     }
@@ -74,7 +82,12 @@ public class BlockListener implements Listener {
         if (!e.getPlayer().isOp()
                 && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getBlock().getRelative(e.getBlockFace()).getLocation()))
         {
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place this block here.");
+            String message = plugin.getConfig().getString("messages.deny-hanging-place", "&cYou are not allowed to place {block} here.");
+            if (!"".equals(message))
+            {
+                e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message
+                        .replaceAll("\\{block\\}", mat.name())));
+            }
             e.setCancelled(true);
         }
     }
@@ -93,7 +106,12 @@ public class BlockListener implements Listener {
             if (!player.isOp()
                     && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getEntity().getLocation()))
             {
-                player.sendMessage(ChatColor.RED + "You are not allowed to break this block here.");
+                String message = plugin.getConfig().getString("messages.deny-hanging-break", "&cYou are not allowed to break {block} here.");
+                if (!"".equals(message))
+                {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', message
+                            .replaceAll("\\{block\\}", mat.name())));
+                }
                 e.setCancelled(true);
             }
         }
