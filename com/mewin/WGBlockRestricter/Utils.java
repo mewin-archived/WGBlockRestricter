@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -158,8 +159,11 @@ public final class Utils {
     public static ArrayList<BlockMaterial> castMaterial(Material material) {
         try {
             return BlockMaterial.ByMaterial.byMaterial.get(material);
-        } catch(IllegalArgumentException ex) {
-            return null;
+        }
+        catch(IllegalArgumentException ex)
+        {
+            Bukkit.getLogger().log(Level.WARNING, "Invalid material: ", material.name());
+            return new ArrayList<BlockMaterial>();
         }
     }
 }
