@@ -37,14 +37,16 @@ public class BlockListener implements Listener {
     private WGBlockRestricterPlugin plugin;
     private WorldGuardPlugin wgPlugin;
     
-    public BlockListener(WGBlockRestricterPlugin plugin, WorldGuardPlugin wgPlugin) {
+    public BlockListener(WGBlockRestricterPlugin plugin, WorldGuardPlugin wgPlugin)
+    {
         this.plugin = plugin;
         this.wgPlugin = wgPlugin;
     }
     
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e) {
-        if (!e.getPlayer().isOp()
+    public void onBlockPlace(BlockPlaceEvent e)
+    {
+        if (!e.getPlayer().hasPermission("wgblockrestricter.ignore")
                 && !Utils.blockAllowedAtLocation(wgPlugin, e.getBlockPlaced().getType(), e.getBlockPlaced().getLocation())) {
             String message = plugin.getConfig().getString("messages.deny-block-place", "&cYou are not allowed to place {block} here.");
             if (!"".equals(message))
@@ -59,7 +61,7 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e)
     {
-        if (!e.getPlayer().isOp()
+        if (!e.getPlayer().hasPermission("wgblockrestricter.ignore")
                 && !Utils.blockAllowedAtLocation(wgPlugin, e.getBlock().getType(), e.getBlock().getLocation())) {
             String message = plugin.getConfig().getString("messages.deny-block-break", "&cYou are not allowed to break {block} here.");
             if (!"".equals(message))
@@ -79,7 +81,7 @@ public class BlockListener implements Listener {
         {
             mat = Material.ITEM_FRAME;
         }
-        if (!e.getPlayer().isOp()
+        if (!e.getPlayer().hasPermission("wgblockrestricter.ignore")
                 && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getBlock().getRelative(e.getBlockFace()).getLocation()))
         {
             String message = plugin.getConfig().getString("messages.deny-hanging-place", "&cYou are not allowed to place {block} here.");
@@ -103,7 +105,7 @@ public class BlockListener implements Listener {
             {
                 mat = Material.ITEM_FRAME;
             }
-            if (!player.isOp()
+            if (!player.hasPermission("wgblockrestricter.ignore")
                     && !Utils.blockAllowedAtLocation(wgPlugin, mat, e.getEntity().getLocation()))
             {
                 String message = plugin.getConfig().getString("messages.deny-hanging-break", "&cYou are not allowed to break {block} here.");
