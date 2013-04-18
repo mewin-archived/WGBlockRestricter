@@ -4,15 +4,15 @@
 # you can use formatting codes (with &) for the messages
 # for more inforamtion look here: http://www.minecraftwiki.net/wiki/Formatting_codes
 messages:
-  # message if a player is denied to place a block:
+  # message when a player is denied to place a block:
   # {block} is replaced with the block the player tried to place
   deny-block-place: "&cYou are not allowed to place {block} here."
-  # message if a player is denied to break a block:
+  # message when a player is denied to break a block:
   # {block} is replaced with the block the player tried to break
   deny-block-break: "&cYou are not allowed to break {block} here."
-  # message if a player is denied to place a painting or an item frame:
+  # message when a player is denied to place a painting or an item frame:
   # {block} is replaced with the block the player tried to place
   deny-hanging-place: "&cYou are not allowed to place {block} here."
-  # message if a player is denied to break a painting or an item frame:
+  # message when a player is denied to break a painting or an item frame:
   # {block} is replaced with the block the player tried to break
   deny-hanging-break: "&cYou are not allowed to break {block} here."
