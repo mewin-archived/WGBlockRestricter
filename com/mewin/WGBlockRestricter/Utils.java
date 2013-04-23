@@ -158,7 +158,15 @@ public final class Utils {
     
     public static ArrayList<BlockMaterial> castMaterial(Material material) {
         try {
-            return BlockMaterial.ByMaterial.byMaterial.get(material);
+            if (BlockMaterial.ByMaterial.byMaterial.containsKey(material))
+            {
+                return BlockMaterial.ByMaterial.byMaterial.get(material);
+            }
+            else
+            {
+                Bukkit.getLogger().log(Level.WARNING, "Invalid material: ", material.name());
+                return new ArrayList<BlockMaterial>();
+            }
         }
         catch(IllegalArgumentException ex)
         {
