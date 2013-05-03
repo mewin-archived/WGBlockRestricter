@@ -19,15 +19,16 @@ package com.mewin.WGBlockRestricter;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  *
@@ -41,6 +42,24 @@ public class BlockListener implements Listener {
     {
         this.plugin = plugin;
         this.wgPlugin = wgPlugin;
+    }
+    
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e)
+    {
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK
+                && e.hasItem()
+                && Utils.isBlockMaterial(e.getMaterial())
+                && !e.getPlayer().hasPermission("wgblockrestricter.ignore")
+                && !Utils.blockAllowedAtLocation(wgPlugin, e.getMaterial(), e.getClickedBlock().getRelative(e.getBlockFace()).getLocation())) {
+            String message = plugin.getConfig().getString("messages.deny-block-place", "&cYou are not allowed to place {block} here.");
+            if (!"".equals(message))
+            {
+                e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', message
+                        .replaceAll("\\{block\\}", e.getMaterial().name())));
+            }
+            e.setCancelled(true);
+        }
     }
     
     @EventHandler
