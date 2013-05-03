@@ -164,14 +164,19 @@ public final class Utils {
             }
             else
             {
-                Bukkit.getLogger().log(Level.WARNING, "Invalid material: ", material.name());
+                Bukkit.getLogger().log(Level.WARNING, "Invalid material: {0}", material.name());
                 return new ArrayList<BlockMaterial>();
             }
         }
         catch(IllegalArgumentException ex)
         {
-            Bukkit.getLogger().log(Level.WARNING, "Invalid material: ", material.name());
+            Bukkit.getLogger().log(Level.WARNING, "Invalid material: {0}", material.name());
             return new ArrayList<BlockMaterial>();
         }
+    }
+    
+    public static boolean isBlockMaterial(Material material)
+    {
+        return BlockMaterial.ByMaterial.byMaterial.containsKey(material);
     }
 }
