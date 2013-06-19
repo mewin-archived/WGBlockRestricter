@@ -2,7 +2,6 @@ package com.mewin.WGBlockRestricter;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import org.bukkit.Material;
 
 /**
