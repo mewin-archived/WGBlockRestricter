@@ -2,6 +2,7 @@ package com.mewin.WGBlockRestricter;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 /**
@@ -167,6 +168,14 @@ public enum BlockMaterial
     DROPPER,
     REDSTONE_BLOCK, 
     
+    //Minecraft 1.6.1
+    StAINED_CLAY, 
+    HAY_BLOCK, 
+    CARPET, 
+    HARD_CLAY, 
+    COAL_BLOCK, 
+    
+    STONE_BRICK(Material.SMOOTH_BRICK), 
     WATER(Material.WATER, Material.STATIONARY_WATER, Material.WATER_BUCKET),
     LAVA(Material.LAVA, Material.STATIONARY_LAVA, Material.LAVA_BUCKET),
     DIODE(Material.DIODE_BLOCK_ON, Material.DIODE_BLOCK_OFF), 
