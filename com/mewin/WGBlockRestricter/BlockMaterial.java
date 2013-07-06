@@ -169,7 +169,7 @@ public enum BlockMaterial
     REDSTONE_BLOCK, 
     
     //Minecraft 1.6.1
-    StAINED_CLAY, 
+    STAINED_CLAY, 
     HAY_BLOCK, 
     CARPET, 
     HARD_CLAY, 
