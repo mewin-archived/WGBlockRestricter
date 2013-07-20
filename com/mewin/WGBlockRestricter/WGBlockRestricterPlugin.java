@@ -16,10 +16,10 @@
  */
 package com.mewin.WGBlockRestricter;
 
+import com.mewin.WGBlockRestricter.flags.BlockMaterialFlag;
 import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
 import com.mewin.WGCustomFlags.flags.CustomSetFlag;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.EnumFlag;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author mewin <mewin001@hotmail.de>
  */
 public class WGBlockRestricterPlugin extends JavaPlugin {
-    public static final EnumFlag BLOCK_TYPE_FLAG = new EnumFlag("block-type", BlockMaterial.class);
+    public static final BlockMaterialFlag BLOCK_TYPE_FLAG = new BlockMaterialFlag("block-type");
     public static final CustomSetFlag ALLOW_BLOCK_FLAG = new CustomSetFlag("allow-blocks", BLOCK_TYPE_FLAG);
     public static final CustomSetFlag DENY_BLOCK_FLAG = new CustomSetFlag("deny-blocks", BLOCK_TYPE_FLAG);
     
