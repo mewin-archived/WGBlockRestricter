@@ -63,9 +63,6 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
         
         getServer().getPluginManager().registerEvents(listener, this);
         
-        custPlugin.addCustomFlag(ALLOW_BLOCK_FLAG);
-        custPlugin.addCustomFlag(DENY_BLOCK_FLAG);
-        
         loadConfig();
     }
     
