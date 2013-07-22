@@ -1,0 +1,6 @@
+- allow-blocks:
+    field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.ALLOW_BLOCK_FLAG
+    description: contains a set of blocks that are allowed inside a region (overrides deny-blocks)
+- deny-blocks:
+    field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.DENY_BLOCK_FLAG
+    description: contains a set of blocks that are blocked inside a region
