@@ -2,7 +2,6 @@ package com.mewin.WGBlockRestricter;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 /**
@@ -25,8 +24,8 @@ public enum BlockMaterial
     GOLD_ORE,
     IRON_ORE,
     COAL_ORE,
-    LOG,
-    LEAVES,
+    LOG(Material.LOG, Material.LOG_2), //1.7.2
+    LEAVES(Material.LEAVES, Material.LEAVES_2), //1.7.2
     SPONGE,
     GLASS,
     LAPIS_ORE,
@@ -174,6 +173,14 @@ public enum BlockMaterial
     CARPET, 
     HARD_CLAY, 
     COAL_BLOCK, 
+    
+    //Minecraft 1.7.2
+    STAINED_GLASS, 
+    STAINED_GLASS_PANE, 
+    ACACIA_STAIRS, 
+    DARK_OAK_STAIRS, 
+    PACKED_ICE, 
+    DOUBLE_PLANT, 
     
     DIODE(Material.DIODE_BLOCK_ON, Material.DIODE_BLOCK_OFF), 
     LAVA(Material.LAVA, Material.STATIONARY_LAVA, Material.LAVA_BUCKET),
