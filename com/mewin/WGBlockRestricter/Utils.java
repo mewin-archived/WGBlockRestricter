@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 mewin <mewin001@hotmail.de>
+ * Copyright (C) 2014 mewin <mewin001@hotmail.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,13 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,8 +38,16 @@ import org.bukkit.Material;
  * @author mewin <mewin001@hotmail.de>
  */
 public final class Utils {
+    public static final EnumMap<Material, Material> baseMaterials = new EnumMap<Material, Material>(Material.class); //used for material groups (like pistons)
+    public static final HashMap<String, Material> aliases = new HashMap<String, Material>(); //used for remapping names and allowing specific non-block-materials
     
-    public static boolean blockAllowedAtLocation(WorldGuardPlugin wgp, Material blockType, Location loc) {
+    
+    public static boolean blockAllowedAtLocation(WorldGuardPlugin wgp, Material mat, Location loc) {
+        Material blockType = mat;
+        if (baseMaterials.containsKey(blockType))
+        {
+            blockType = baseMaterials.get(blockType);
+        }
         RegionManager rm = wgp.getRegionManager(loc.getWorld());
         if (rm == null) {
             return true;
@@ -107,24 +114,19 @@ public final class Utils {
         {
             return null;
         }
-        ArrayList<BlockMaterial> bmList = castMaterial(blockType);
         
-        HashSet<BlockMaterial> allowedBlocks = (HashSet<BlockMaterial>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BLOCK_FLAG);
-        HashSet<BlockMaterial> blockedBlocks = (HashSet<BlockMaterial>) region.getFlag(WGBlockRestricterPlugin.DENY_BLOCK_FLAG);
+        HashSet<Material> allowedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BLOCK_FLAG);
+        HashSet<Material> blockedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.DENY_BLOCK_FLAG);
         
         boolean denied = false;
-        
-        for (BlockMaterial bm : bmList)
-        {
-            if (allowedBlocks != null && (allowedBlocks.contains(bm) || allowedBlocks.contains(BlockMaterial.ANY))) {
-                return true;
-            }
-            else if(blockedBlocks != null && (blockedBlocks.contains(bm) || blockedBlocks.contains(BlockMaterial.ANY))) {
-                denied = true;
-            }
-            else if (isTreefarm(region)) {
-                denied = true;
-            }
+        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR))) {
+            return true;
+        }
+        else if(blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR))) {
+            denied = true;
+        }
+        else if (isTreefarm(region)) {
+            denied = true;
         }
         
         if (!denied)
@@ -156,27 +158,34 @@ public final class Utils {
         }
     }
     
-    public static ArrayList<BlockMaterial> castMaterial(Material material) {
-        try {
-            if (BlockMaterial.ByMaterial.byMaterial.containsKey(material))
-            {
-                return BlockMaterial.ByMaterial.byMaterial.get(material);
-            }
-            else
-            {
-                Bukkit.getLogger().log(Level.WARNING, "Invalid material: {0}", material.name());
-                return new ArrayList<BlockMaterial>();
-            }
-        }
-        catch(IllegalArgumentException ex)
-        {
-            Bukkit.getLogger().log(Level.WARNING, "Invalid material: {0}", material.name());
-            return new ArrayList<BlockMaterial>();
-        }
-    }
-    
-    public static boolean isBlockMaterial(Material material)
+    public static void init()
     {
-        return BlockMaterial.ByMaterial.byMaterial.containsKey(material);
+        baseMaterials.put(Material.LOG_2, Material.LOG);
+        baseMaterials.put(Material.LEAVES_2, Material.LEAVES);
+        baseMaterials.put(Material.DIODE_BLOCK_OFF, Material.DIODE);
+        baseMaterials.put(Material.DIODE_BLOCK_ON, Material.DIODE);
+        baseMaterials.put(Material.STATIONARY_LAVA, Material.LAVA);
+        baseMaterials.put(Material.LAVA_BUCKET, Material.LAVA);
+        baseMaterials.put(Material.PISTON_EXTENSION, Material.PISTON_BASE);
+        baseMaterials.put(Material.PISTON_MOVING_PIECE, Material.PISTON_BASE);
+        baseMaterials.put(Material.PISTON_STICKY_BASE, Material.PISTON_BASE);
+        baseMaterials.put(Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR);
+        baseMaterials.put(Material.REDSTONE_COMPARATOR_ON, Material.REDSTONE_COMPARATOR);
+        baseMaterials.put(Material.REDSTONE_LAMP_OFF, Material.REDSTONE_LAMP_ON);
+        baseMaterials.put(Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON);
+        baseMaterials.put(Material.WALL_SIGN, Material.SIGN);
+        baseMaterials.put(Material.SIGN_POST, Material.SIGN);
+        baseMaterials.put(Material.SUGAR_CANE_BLOCK, Material.SUGAR_CANE);
+        baseMaterials.put(Material.STATIONARY_LAVA, Material.WATER);
+        baseMaterials.put(Material.WATER_BUCKET, Material.WATER);
+        
+        aliases.put("piston", Material.PISTON_BASE);
+        aliases.put("redstone_lamp", Material.REDSTONE_LAMP_ON);
+        aliases.put("stone_brick", Material.SMOOTH_BRICK);
+        aliases.put("painting", Material.PAINTING);
+        aliases.put("item_frame", Material.ITEM_FRAME);
+        aliases.put("any", Material.AIR);
+        aliases.put("sign", Material.SIGN);
+        aliases.put("diode", Material.DIODE);
     }
 }
