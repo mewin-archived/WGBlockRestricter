@@ -17,11 +17,10 @@
 
 package com.mewin.WGBlockRestricter.flags;
 
-import com.mewin.WGBlockRestricter.BlockMaterial;
+import com.mewin.WGBlockRestricter.Utils;
+import com.mewin.WGCustomFlags.flags.CustomFlag;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.EnumFlag;
 import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
-import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 
@@ -29,42 +28,71 @@ import org.bukkit.command.CommandSender;
  *
  * @author mewin<mewin001@hotmail.de>
  */
-public class BlockMaterialFlag extends EnumFlag
+public class BlockMaterialFlag extends CustomFlag<Material>
 {
     public BlockMaterialFlag(String name)
     {
-        super(name, BlockMaterial.class);
+        super(name);
     }
 
     @Override
-    public Enum parseInput(WorldGuardPlugin plugin, CommandSender sender, String input) throws InvalidFlagFormat
+    public Material parseInput(WorldGuardPlugin wgp, CommandSender cs, String input) throws InvalidFlagFormat
     {
+        if (Utils.aliases.containsKey(input.trim().toLowerCase().replace(" ", "_")))
+        {
+            return Utils.aliases.get(input);
+        }
+        
+        Material mat;
         try
         {
             int i = Integer.valueOf(input);
-            Material mat = Material.getMaterial(i);
+            mat = Material.getMaterial(i);
             
             if (mat == null)
             {
                 throw new InvalidFlagFormat(input + " is not a valid material id.");
             }
-            else
-            {
-                ArrayList<BlockMaterial> materials = BlockMaterial.ByMaterial.byMaterial.get(mat);
-
-                if (materials == null || materials.size() < 1)
-                {
-                    throw new InvalidFlagFormat(mat.name() + " is not a valid block material.");
-                }
-                else
-                {
-                    return materials.get(0);
-                }
-            }
         }
         catch(NumberFormatException ex)
         {
-            return super.parseInput(plugin, sender, input);
+            mat = Material.getMaterial(input);
+            if (mat == null)
+            {
+                throw new InvalidFlagFormat(input + " is not a valid material name.");
+            }
         }
+        if (!mat.isBlock())
+        {
+            throw new InvalidFlagFormat (mat.name() + " is not a block.");
+        }
+        else
+        {
+            return mat;
+        }
+    }
+
+    @Override
+    public Material unmarshal(Object o)
+    {
+        return loadFromDb((String) o);
+    }
+
+    @Override
+    public Object marshal(Material t)
+    {
+        return saveToDb(t);
+    }
+
+    @Override
+    public Material loadFromDb(String str)
+    {
+        return Material.getMaterial(str);
+    }
+
+    @Override
+    public String saveToDb(Material o)
+    {
+        return o.name();
     }
 }
