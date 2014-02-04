@@ -62,7 +62,7 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
         listener = new BlockListener(this, wgPlugin);
         
         getServer().getPluginManager().registerEvents(listener, this);
-        Utils.init();
+        
         loadConfig();
     }
     
