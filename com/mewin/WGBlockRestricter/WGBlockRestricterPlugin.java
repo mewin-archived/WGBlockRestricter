@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 mewin <mewin001@hotmail.de>
+ * Copyright (C) 2014 mewin <mewin001@hotmail.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,10 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
     public static final BlockMaterialFlag BLOCK_TYPE_FLAG = new BlockMaterialFlag("block-type");
     public static final CustomSetFlag ALLOW_BLOCK_FLAG = new CustomSetFlag("allow-blocks", BLOCK_TYPE_FLAG);
     public static final CustomSetFlag DENY_BLOCK_FLAG = new CustomSetFlag("deny-blocks", BLOCK_TYPE_FLAG);
+    public static final CustomSetFlag ALLOW_PLACE_FLAG = new CustomSetFlag("allow-place", BLOCK_TYPE_FLAG);
+    public static final CustomSetFlag DENY_PLACE_FLAG = new CustomSetFlag("deny-place", BLOCK_TYPE_FLAG);
+    public static final CustomSetFlag ALLOW_BREAK_FLAG = new CustomSetFlag("allow-break", BLOCK_TYPE_FLAG);
+    public static final CustomSetFlag DENY_BREAK_FLAG = new CustomSetFlag("deny-break", BLOCK_TYPE_FLAG);
     
     private BlockListener listener;
     private WorldGuardPlugin wgPlugin;
@@ -64,6 +68,8 @@ public class WGBlockRestricterPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(listener, this);
         
         loadConfig();
+        
+        Utils.init();
     }
     
     private WorldGuardPlugin getWorldGuard() {

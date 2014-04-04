@@ -4,3 +4,15 @@
 - deny-blocks:
     field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.DENY_BLOCK_FLAG
     description: contains a set of blocks that are blocked inside a region
+- allow-place:
+    field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.ALLOW_PLACE_FLAG
+    description: contains a set of blocks that can be placed inside a region (overrides deny-place)
+- deny-place:
+    field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.DENY_PLACE_FLAG
+    description: contains a set of blocks that can not be placed inside a region
+- allow-break:
+    field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.ALLOW_BREAK_FLAG
+    description: contains a set of blocks that can be broken inside a region (overrides deny-break)
+- deny-break:
+    field: com.mewin.WGBlockRestricter.WGBlockRestricterPlugin.DENY_BREAK_FLAG
+    description: contains a set of blocks that can not be broken inside a region
