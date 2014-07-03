@@ -49,6 +49,7 @@ public class BlockListener implements Listener {
     {
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK
                 && e.hasItem()
+                && Utils.baseMaterials.containsKey(e.getItem().getType())
                 && !e.getPlayer().hasPermission("wgblockrestricter.ignore")
                 && !Utils.placeAllowedAtLocation(wgPlugin, e.getMaterial(), e.getClickedBlock().getRelative(e.getBlockFace()).getLocation())) {
             String message = plugin.getConfig().getString("messages.deny-block-place", "&cYou are not allowed to place {block} here.");

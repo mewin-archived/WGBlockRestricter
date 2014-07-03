@@ -56,7 +56,7 @@ public class BlockMaterialFlag extends CustomFlag<Material>
         }
         catch(NumberFormatException ex)
         {
-            mat = Material.getMaterial(input);
+            mat = Material.getMaterial(input.toUpperCase());
             if (mat == null)
             {
                 throw new InvalidFlagFormat(input + " is not a valid material name.");

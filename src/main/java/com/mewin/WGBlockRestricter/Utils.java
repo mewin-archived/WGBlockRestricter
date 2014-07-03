@@ -222,7 +222,7 @@ public final class Utils
             return null;
         }
         
-        if (!(Boolean) blockAllowedInRegion(region, blockType))
+        if (blockAllowedInRegion(region, blockType) == Boolean.FALSE)
         {
             return false;
         }
@@ -325,13 +325,13 @@ public final class Utils
             return null;
         }
         
-        if (!(Boolean) blockAllowedInRegion(region, blockType))
+        if (blockAllowedInRegion(region, blockType) == Boolean.FALSE)
         {
             return false;
         }
         
         HashSet<Material> allowedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BREAK_FLAG);
-        HashSet<Material> blockedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BREAK_FLAG);
+        HashSet<Material> blockedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.DENY_BREAK_FLAG);
         
         boolean denied = false;
         if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR))) {
@@ -365,7 +365,7 @@ public final class Utils
             return false;
         }
         try {
-            StateFlag treeFarmFlag = de.bangl.wgtff.listeners.PlayerListener.FLAG_TREEFARM;
+            StateFlag treeFarmFlag = de.bangl.wgtff.WGTreeFarmFlagPlugin.FLAG_TREEFARM;
             
             return region.getFlag(treeFarmFlag) == State.DENY;
         } catch(Error ex) {
@@ -375,12 +375,12 @@ public final class Utils
     
     public static void init()
     {
-        baseMaterials.put(Material.LOG_2, Material.LOG);
-        baseMaterials.put(Material.LEAVES_2, Material.LEAVES);
         baseMaterials.put(Material.DIODE_BLOCK_OFF, Material.DIODE);
         baseMaterials.put(Material.DIODE_BLOCK_ON, Material.DIODE);
         baseMaterials.put(Material.STATIONARY_LAVA, Material.LAVA);
         baseMaterials.put(Material.LAVA_BUCKET, Material.LAVA);
+        baseMaterials.put(Material.LEAVES_2, Material.LEAVES);
+        baseMaterials.put(Material.LOG_2, Material.LOG);
         baseMaterials.put(Material.PISTON_EXTENSION, Material.PISTON_BASE);
         baseMaterials.put(Material.PISTON_MOVING_PIECE, Material.PISTON_BASE);
         baseMaterials.put(Material.PISTON_STICKY_BASE, Material.PISTON_BASE);
@@ -392,6 +392,7 @@ public final class Utils
         baseMaterials.put(Material.SIGN_POST, Material.SIGN);
         baseMaterials.put(Material.SUGAR_CANE_BLOCK, Material.SUGAR_CANE);
         baseMaterials.put(Material.STATIONARY_LAVA, Material.WATER);
+        baseMaterials.put(Material.STRING, Material.TRIPWIRE);
         baseMaterials.put(Material.WATER_BUCKET, Material.WATER);
         
         aliases.put("piston", Material.PISTON_BASE);
