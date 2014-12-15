@@ -48,7 +48,7 @@ public final class Utils
 {
     public static final EnumMap<Material, Material> baseMaterials = new EnumMap<Material, Material>(Material.class); //used for material groups (like pistons)
     public static final HashMap<String, Material> aliases = new HashMap<String, Material>(); //used for remapping names and allowing specific non-block-materials   
-    
+
     @Deprecated
     public static boolean blockAllowedAtLocation(WorldGuardPlugin wgp, Material mat, Location loc)
     {
@@ -58,96 +58,109 @@ public final class Utils
             blockType = baseMaterials.get(blockType);
         }
         RegionManager rm = wgp.getRegionManager(loc.getWorld());
-        if (rm == null) {
+        if (rm == null)
+        {
             return true;
         }
         ApplicableRegionSet regions = rm.getApplicableRegions(loc);
         Iterator<ProtectedRegion> itr = regions.iterator();
         Map<ProtectedRegion, Boolean> regionsToCheck = new HashMap<ProtectedRegion, Boolean>();
         Set<ProtectedRegion> ignoredRegions = new HashSet<ProtectedRegion>();
-        
-        while(itr.hasNext()) {
+
+        while (itr.hasNext())
+        {
             ProtectedRegion region = itr.next();
-            
-            if (ignoredRegions.contains(region)) {
+
+            if (ignoredRegions.contains(region))
+            {
                 continue;
             }
-            
+
             Object allowed = blockAllowedInRegion(region, blockType);
-            
-            if (allowed != null) {
+
+            if (allowed != null)
+            {
                 ProtectedRegion parent = region.getParent();
-                
-                while(parent != null) {
+
+                while (parent != null)
+                {
                     ignoredRegions.add(parent);
-                    
+
                     parent = parent.getParent();
                 }
-                
+
                 regionsToCheck.put(region, (Boolean) allowed);
             }
         }
-        
-        if (regionsToCheck.size() >= 1) {
+
+        if (regionsToCheck.size() >= 1)
+        {
             Iterator<Entry<ProtectedRegion, Boolean>> itr2 = regionsToCheck.entrySet().iterator();
-            
-            while(itr2.hasNext()) {
+
+            while (itr2.hasNext())
+            {
                 Entry<ProtectedRegion, Boolean> entry = itr2.next();
-                
+
                 ProtectedRegion region = entry.getKey();
                 boolean value = entry.getValue();
-                
-                if (ignoredRegions.contains(region)) {
+
+                if (ignoredRegions.contains(region))
+                {
                     continue;
                 }
-                
-                if (value) { // allow > deny
+
+                if (value)
+                { // allow > deny
                     return true;
                 }
             }
-            
+
             return false;
-        } else {
+        } else
+        {
             Object allowed = blockAllowedInRegion(rm.getRegion("__global__"), blockType);
-            
-            if (allowed != null) {
+
+            if (allowed != null)
+            {
                 return (Boolean) allowed;
-            } else {
+            } else
+            {
                 return true;
             }
         }
     }
-    
-    public static Object blockAllowedInRegion(ProtectedRegion region, Material blockType) {
+
+    public static Object blockAllowedInRegion(ProtectedRegion region, Material blockType)
+    {
         if (region == null)
         {
             return null;
         }
-        
+
         HashSet<Material> allowedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BLOCK_FLAG);
         HashSet<Material> blockedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.DENY_BLOCK_FLAG);
-        
+
         boolean denied = false;
-        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR))) {
+        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR)))
+        {
             return true;
-        }
-        else if(blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR))) {
+        } else if (blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR)))
+        {
+            denied = true;
+        } else if (isTreefarm(region))
+        {
             denied = true;
         }
-        else if (isTreefarm(region)) {
-            denied = true;
-        }
-        
+
         if (!denied)
         {
             return null;
-        }
-        else
+        } else
         {
             return false;
         }
     }
-    
+
     public static boolean placeAllowedAtLocation(WorldGuardPlugin wgp, Material mat, Location loc)
     {
         Material blockType = mat;
@@ -156,101 +169,114 @@ public final class Utils
             blockType = baseMaterials.get(blockType);
         }
         RegionManager rm = wgp.getRegionManager(loc.getWorld());
-        if (rm == null) {
+        if (rm == null)
+        {
             return true;
         }
         ApplicableRegionSet regions = rm.getApplicableRegions(loc);
         Iterator<ProtectedRegion> itr = regions.iterator();
         Map<ProtectedRegion, Boolean> regionsToCheck = new HashMap<ProtectedRegion, Boolean>();
         Set<ProtectedRegion> ignoredRegions = new HashSet<ProtectedRegion>();
-        
-        while(itr.hasNext()) {
+
+        while (itr.hasNext())
+        {
             ProtectedRegion region = itr.next();
-            
-            if (ignoredRegions.contains(region)) {
+
+            if (ignoredRegions.contains(region))
+            {
                 continue;
             }
-            
+
             Object allowed = placeAllowedInRegion(region, blockType);
-            
-            if (allowed != null) {
+
+            if (allowed != null)
+            {
                 ProtectedRegion parent = region.getParent();
-                
-                while(parent != null) {
+
+                while (parent != null)
+                {
                     ignoredRegions.add(parent);
-                    
+
                     parent = parent.getParent();
                 }
-                
+
                 regionsToCheck.put(region, (Boolean) allowed);
             }
         }
-        
-        if (regionsToCheck.size() >= 1) {
+
+        if (regionsToCheck.size() >= 1)
+        {
             Iterator<Entry<ProtectedRegion, Boolean>> itr2 = regionsToCheck.entrySet().iterator();
-            
-            while(itr2.hasNext()) {
+
+            while (itr2.hasNext())
+            {
                 Entry<ProtectedRegion, Boolean> entry = itr2.next();
-                
+
                 ProtectedRegion region = entry.getKey();
                 boolean value = entry.getValue();
-                
-                if (ignoredRegions.contains(region)) {
+
+                if (ignoredRegions.contains(region))
+                {
                     continue;
                 }
-                
-                if (value) { // allow > deny
+
+                if (value)
+                { // allow > deny
                     return true;
                 }
             }
-            
+
             return false;
-        } else {
+        } else
+        {
             Object allowed = placeAllowedInRegion(rm.getRegion("__global__"), blockType);
-            
-            if (allowed != null) {
+
+            if (allowed != null)
+            {
                 return (Boolean) allowed;
-            } else {
+            } else
+            {
                 return true;
             }
         }
     }
-    
-    public static Object placeAllowedInRegion(ProtectedRegion region, Material blockType) {
+
+    public static Object placeAllowedInRegion(ProtectedRegion region, Material blockType)
+    {
         if (region == null)
         {
             return null;
         }
-        
+
         if (blockAllowedInRegion(region, blockType) == Boolean.FALSE)
         {
             return false;
         }
-        
+
         HashSet<Material> allowedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.ALLOW_PLACE_FLAG);
         HashSet<Material> blockedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.DENY_PLACE_FLAG);
-        
+
         boolean denied = false;
-        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR))) {
+        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR)))
+        {
             return true;
-        }
-        else if(blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR))) {
+        } else if (blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR)))
+        {
+            denied = true;
+        } else if (isTreefarm(region))
+        {
             denied = true;
         }
-        else if (isTreefarm(region)) {
-            denied = true;
-        }
-        
+
         if (!denied)
         {
             return null;
-        }
-        else
+        } else
         {
             return false;
         }
     }
-    
+
     public static boolean breakAllowedAtLocation(WorldGuardPlugin wgp, Material mat, Location loc)
     {
         Material blockType = mat;
@@ -259,120 +285,136 @@ public final class Utils
             blockType = baseMaterials.get(blockType);
         }
         RegionManager rm = wgp.getRegionManager(loc.getWorld());
-        if (rm == null) {
+        if (rm == null)
+        {
             return true;
         }
         ApplicableRegionSet regions = rm.getApplicableRegions(loc);
         Iterator<ProtectedRegion> itr = regions.iterator();
         Map<ProtectedRegion, Boolean> regionsToCheck = new HashMap<ProtectedRegion, Boolean>();
         Set<ProtectedRegion> ignoredRegions = new HashSet<ProtectedRegion>();
-        
-        while(itr.hasNext()) {
+
+        while (itr.hasNext())
+        {
             ProtectedRegion region = itr.next();
-            
-            if (ignoredRegions.contains(region)) {
+
+            if (ignoredRegions.contains(region))
+            {
                 continue;
             }
-            
+
             Object allowed = breakAllowedInRegion(region, blockType);
-            
-            if (allowed != null) {
+
+            if (allowed != null)
+            {
                 ProtectedRegion parent = region.getParent();
-                
-                while(parent != null) {
+
+                while (parent != null)
+                {
                     ignoredRegions.add(parent);
-                    
+
                     parent = parent.getParent();
                 }
-                
+
                 regionsToCheck.put(region, (Boolean) allowed);
             }
         }
-        
-        if (regionsToCheck.size() >= 1) {
+
+        if (regionsToCheck.size() >= 1)
+        {
             Iterator<Entry<ProtectedRegion, Boolean>> itr2 = regionsToCheck.entrySet().iterator();
-            
-            while(itr2.hasNext()) {
+
+            while (itr2.hasNext())
+            {
                 Entry<ProtectedRegion, Boolean> entry = itr2.next();
-                
+
                 ProtectedRegion region = entry.getKey();
                 boolean value = entry.getValue();
-                
-                if (ignoredRegions.contains(region)) {
+
+                if (ignoredRegions.contains(region))
+                {
                     continue;
                 }
-                
-                if (value) { // allow > deny
+
+                if (value)
+                { // allow > deny
                     return true;
                 }
             }
-            
+
             return false;
-        } else {
+        } else
+        {
             Object allowed = breakAllowedInRegion(rm.getRegion("__global__"), blockType);
-            
-            if (allowed != null) {
+
+            if (allowed != null)
+            {
                 return (Boolean) allowed;
-            } else {
+            } else
+            {
                 return true;
             }
         }
     }
-    
-    public static Object breakAllowedInRegion(ProtectedRegion region, Material blockType) {
+
+    public static Object breakAllowedInRegion(ProtectedRegion region, Material blockType)
+    {
         if (region == null)
         {
             return null;
         }
-        
+
         if (blockAllowedInRegion(region, blockType) == Boolean.FALSE)
         {
             return false;
         }
-        
+
         HashSet<Material> allowedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.ALLOW_BREAK_FLAG);
         HashSet<Material> blockedBlocks = (HashSet<Material>) region.getFlag(WGBlockRestricterPlugin.DENY_BREAK_FLAG);
-        
+
         boolean denied = false;
-        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR))) {
+        if (allowedBlocks != null && (allowedBlocks.contains(blockType) || allowedBlocks.contains(Material.AIR)))
+        {
             return true;
-        }
-        else if(blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR))) {
+        } else if (blockedBlocks != null && (blockedBlocks.contains(blockType) || blockedBlocks.contains(Material.AIR)))
+        {
+            denied = true;
+        } else if (isTreefarm(region))
+        {
             denied = true;
         }
-        else if (isTreefarm(region)) {
-            denied = true;
-        }
-        
+
         if (!denied)
         {
             return null;
-        }
-        else
+        } else
         {
             return false;
         }
     }
-    
+
     public static boolean hasWGTFF()
     {
         return Bukkit.getServer().getPluginManager().getPlugin("WGTreeFarmFlag") != null;
     }
-    
-    public static boolean isTreefarm(ProtectedRegion region) {
+
+    public static boolean isTreefarm(ProtectedRegion region)
+    {
         if (!hasWGTFF())
         {
             return false;
         }
-        try {
+        try
+        {
             StateFlag treeFarmFlag = de.bangl.wgtff.WGTreeFarmFlagPlugin.FLAG_TREEFARM;
-            
+
             return region.getFlag(treeFarmFlag) == State.DENY;
-        } catch(Error ex) {
+        } catch (Error ex)
+        {
             return false;
         }
     }
-    
+
     public static void init()
     {
         baseMaterials.put(Material.DIODE_BLOCK_OFF, Material.DIODE);
@@ -394,7 +436,7 @@ public final class Utils
         baseMaterials.put(Material.STATIONARY_LAVA, Material.WATER);
         baseMaterials.put(Material.STRING, Material.TRIPWIRE);
         baseMaterials.put(Material.WATER_BUCKET, Material.WATER);
-        
+
         aliases.put("piston", Material.PISTON_BASE);
         aliases.put("redstone_lamp", Material.REDSTONE_LAMP_ON);
         aliases.put("stone_brick", Material.SMOOTH_BRICK);
@@ -403,7 +445,7 @@ public final class Utils
         aliases.put("any", Material.AIR);
         aliases.put("sign", Material.SIGN);
         aliases.put("diode", Material.DIODE);
-        
+
         File itemCsv = new File("item.csv");
         if (itemCsv.exists() && itemCsv.isFile())
         {
@@ -427,7 +469,7 @@ public final class Utils
                         String type = split[1];
                         String mod = split[2];
                         String name = split[3];
-                        
+
                         if (!type.equalsIgnoreCase("block")
                                 || mod.equalsIgnoreCase("Minecraft")
                                 || mod.equalsIgnoreCase("null"))
@@ -441,19 +483,19 @@ public final class Utils
                             aliases.put(shortName, Material.getMaterial(id));
                         }
                         c++;
-                        Bukkit.getLogger().log(Level.INFO, "Added material {0} of mod {1}.", new Object[] {name, mod});
-                    }
-                    catch(NumberFormatException ex)
+                        Bukkit.getLogger().log(Level.INFO, "Added material {0} of mod {1}.", new Object[]
+                        {
+                            name, mod
+                        });
+                    } catch (NumberFormatException ex)
                     {
                         continue;
                     }
                 }
-            }
-            catch(IOException ex)
+            } catch (IOException ex)
             {
                 Bukkit.getLogger().log(Level.WARNING, "Failed to load item.csv", ex);
-            }
-            finally
+            } finally
             {
                 try
                 {
@@ -461,19 +503,17 @@ public final class Utils
                     {
                         in.close();
                     }
-                }
-                catch(IOException ex)
+                } catch (IOException ex)
                 {
-                    
+
                 }
             }
-        }
-        else
+        } else
         {
             Bukkit.getLogger().log(Level.INFO, "No item.csv found.");
         }
     }
-    
+
     private static String readLine(InputStream in) throws IOException
     {
         Queue<Byte> bQ = new LinkedList<Byte>();
@@ -493,13 +533,12 @@ public final class Utils
         if (bQ.size() < 1)
         {
             return null;
-        }
-        else
+        } else
         {
             return bQToString(bQ);
         }
     }
-    
+
     private static String bQToString(Queue<Byte> bQ)
     {
         byte[] bytes = new byte[bQ.size()];
